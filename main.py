@@ -202,6 +202,7 @@ def main() :
 
   
     while True:
+        print("\n")
         text = prompt("Enter a command: ", completer=command_completer)
         table = PrettyTable()
         table.field_names = ["Name", "Phone", "Birthday"]
