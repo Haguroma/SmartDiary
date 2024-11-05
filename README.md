@@ -1,2 +1,0 @@
-# SmartDiary
-Group_Project
