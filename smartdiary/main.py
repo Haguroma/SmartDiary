@@ -234,7 +234,8 @@ def main() :
         elif command == "all":
             if book:
                 for record in book.data:
-                    table.add_row([book.data[record].name.value, '; '.join(p.value for p in book.data[record].phones), "" if book.data[record].birthday is None else book.data[record].birthday.birthday])
+                    birthday = datetime.strftime(book.data[record].birthday.birthday, "%d.%m.%Y") if book.data[record].birthday != None else "No info"
+                    table.add_row([book.data[record].name.value, '; '.join(p.value for p in book.data[record].phones), birthday])
                 print(table)
             else: 
                 print("No contacts")
@@ -242,7 +243,8 @@ def main() :
         # За цією командою бот виводить у консоль номер телефону для зазначеного контакту username
         elif command == "phone":
             record = show_phone(args, book)
-            table.add_row([record.name.value, '; '.join(p.value for p in record.phones), ["" if record.birthday is None else record.birthday.birthday]])
+            birthday = datetime.strftime(record.birthday.birthday, "%d.%m.%Y") if record.birthday != None else "No info"
+            table.add_row([record.name.value, '; '.join(p.value for p in record.phones), birthday])
             print(table) 
 
         # За цією командою бот зберігає в пам'яті новий номер телефону phone для контакту username, що вже існує в записнику.
@@ -265,8 +267,7 @@ def main() :
                     contact = congrat_list.data[record]
                     name = contact.name.value
                     phone = ';'.join(p.value for p in contact.phones)
-                    birthday = ["" if contact.birthday is None else contact.birthday.birthday]
-                    #table.field_names = ["Name", "Phone", "Birthday"]
+                    birthday = datetime.strftime(contact.birthday.birthday, "%d.%m.%Y") if contact.birthday != None else "No info"
                     table.add_row([name, phone, birthday])
                 print(table)
             else:
