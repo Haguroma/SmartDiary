@@ -148,6 +148,33 @@ class Record:
             return "Email updated."
         except ValueError as e:
             return str(e)
+    def додати_запис(self, назва, текст):
+        return self.записи.додати_запис(назва, текст)
+
+    def редагувати_запис(self, назва, новий_текст):
+        return self.записи.редагувати_запис(назва, новий_текст)
+
+    def видалити_запис(self, назва):
+        return self.записи.видалити_запис(назва)
+
+    def знайти_запис(self, назва):
+        return self.записи.знайти_запис(назва)
+
+    def показати_всі_записи(self):
+        return self.записи.показати_всі_записи()
+
+class AddressBook(UserDict):
+    def add_record(self, record):
+        self.data[record.name.значення] = record
+
+    def find(self, name):
+        return self.data.get(name, "Запис не знайдено.")
+
+    def delete(self, name):
+        if name in self.data:
+            del self.data[name]
+            return "Запис видалено."
+        return "Запис не знайдено."        
 
 
     def find_phone(self, phone: str) -> str:
