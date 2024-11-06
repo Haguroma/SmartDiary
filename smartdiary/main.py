@@ -268,7 +268,7 @@ def main() :
         print("\n")
         text = prompt("Enter a command: ", completer=command_completer)
         table = PrettyTable()
-        table.field_names = ["Name", "Phone", "Birthday"]
+        table.field_names = ["Name", "Phone", "Birthday" , "Email", "Address"]
         
         command, *args = parse_input(text.strip().lower())
 
