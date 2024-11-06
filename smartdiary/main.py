@@ -1,5 +1,5 @@
-import re, pickle
-from address_book import *
+import re, pickle, os
+from smartdiary.address_book import *
 
 from colorama import Fore, Style
 from prettytable import PrettyTable
@@ -40,13 +40,19 @@ def input_error(func):
 
 
 def save_data(book, filename : str = "addressbook.pkl"):
-    with open(filename, "wb") as f:
+    path_ext = os.path.expanduser("~")
+    curr_path = os.path.join(path_ext, filename)
+
+    with open(curr_path, "wb") as f:
         pickle.dump(book, f)
 
 
 def load_data(filename : str = "addressbook.pkl"):
+    path_ext = os.path.expanduser("~")
+    curr_path = os.path.join(path_ext, filename)
+    
     try:
-        with open(filename, "rb") as f:
+        with open(curr_path, "rb") as f:
             return pickle.load(f)
     except FileNotFoundError:
         return AddressBook()  # Повернення нової адресної книги, якщо файл не знайдено
