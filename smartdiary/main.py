@@ -38,6 +38,30 @@ def input_error(func):
 
     return inner
 
+# декоратор для обробки помилок введення електронної пошти
+def email_input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError as e:
+            if "email" in str(e).lower():
+                print(Fore.RED + "Invalid email format. Please enter a valid email address.")
+            else:
+                raise e
+    return inner
+
+# декоратор для обробки помилок введення адреси
+def address_input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError as e:
+            if "address" in str(e).lower():
+                print(Fore.RED + "Invalid address format. Please enter a valid address.")
+            else:
+                raise e
+    return inner  
+
 
 def save_data(book, filename : str = "addressbook.pkl"):
     path_ext = os.path.expanduser("~")
@@ -83,6 +107,37 @@ def add_contact(args : list[str], book : AddressBook) -> str:
         new_record.add_phone(phone)
         book.add_record(new_record)   
         return "Contact added."
+    
+@input_error
+@email_input_error
+def add_email(args: list[str], book: AddressBook) -> str:
+    if len(args) < 2:
+        raise ValueError("Please enter 2 arguments: |name| |email|")
+    
+    name, email = args
+    record = book.find(name)
+
+    if isinstance(record, Record):
+        record.edit_email(email)
+        return "Email added."
+    else:
+        return "Name not found."
+
+
+@input_error
+@address_input_error
+def add_address(args: list[str], book: AddressBook) -> str:
+    if len(args) < 2:
+        raise ValueError("Please enter 2 arguments: |name| |address|")
+    
+    name, address = args
+    record = book.find(name)
+
+    if isinstance(record, Record):
+        record.edit_address(address)
+        return "Address added."
+    else:
+        return "Name not found."
 
 
 @input_error
@@ -187,6 +242,8 @@ def helper():
     table_help.add_row(["change", "Change a contact's phone number"])
     table_help.add_row(["add-birthday", "Add a birthday to a contact"])
     table_help.add_row(["add_phone", "Add a phone to a contact"])
+    table_help.add_row(["add_email", "Add an email to a contact"])
+    table_help.add_row(["add_address", "Add an address to a contact"])
     table_help.add_row(["birthdays", "List of employees to congratulate"])
     table_help.add_row(["show-birthday", "Show a contact's birthday"])
 
@@ -198,7 +255,7 @@ def main() :
     book = load_data()
 
     # ініціалізація списку команд-підказок
-    command_completer = WordCompleter(['exit','close','add','all','phone','change','add-birthday', 'add-phone', 'birthdays', 'show-birthday'])
+    command_completer = WordCompleter(['exit','close','add','all','phone','change','add-birthday', 'add-phone', 'birthdays', 'show-birthday', 'add_email', 'add_address'])
 
     # вітаємо користувача
     print(Fore.BLUE + "Welcome to the assistant bot!")  
@@ -251,6 +308,12 @@ def main() :
 
         elif command == "add-phone":
             print(add_phone(args, book))
+            
+        elif command == "add_email":
+            print(add_email(args, book))
+            
+        elif command == "add_address":
+            print(add_address(args, book))
 
         elif command == "add-birthday":
             print(add_birthday(args, book))
