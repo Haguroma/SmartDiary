@@ -39,7 +39,16 @@ python -m smartdiary
 
 Follow the on-screen prompts and use the available commands:
 
-| Command | Description | Example | |-----------------|-----------------------------------------------------------|---------------------------------------| | hello | Displays a greeting message. | hello | | add | Adds a new contact. | add John 1234567890 | | all | Lists all saved contacts. | all | | phone | Shows the phone number(s) of a contact. | phone John | | change | Updates the phone number of a contact. | change John 9876543210 | | add-phone | Adds an additional phone number to a contact. | add-phone John 5551234567 | | add-birthday | Adds a birthday to a contact. | add-birthday John 01.01.1990 | | show-birthday| Shows the birthday of a contact. | show-birthday John | | birthdays | Lists upcoming birthdays within a given period (default: 7 days). | birthdays or birthdays 14 | | close/exit | Exits the application. | close or exit |
+| Command | Description | Example | |-----------------|-----------------------------------------------------------|---------------------------------------| | hello | Displays a greeting message. | hello | 
+| add | Adds a new contact. | add John 1234567890 | 
+| all | Lists all saved contacts. | all | 
+| phone | Shows the phone number(s) of a contact. | phone John | 
+| change | Updates the phone number of a contact. | change John 9876543210 | 
+| add-phone | Adds an additional phone number to a contact. | add-phone John 5551234567 | 
+| add-birthday | Adds a birthday to a contact. | add-birthday John 01.01.1990 | 
+| show-birthday| Shows the birthday of a contact. | show-birthday John | 
+| birthdays | Lists upcoming birthdays within a given period (default: 7 days). | birthdays or birthdays 14 | 
+| close/exit | Exits the application. | close or exit |
 
 Contributing
 Contributions are welcome! If you find any bugs or have suggestions for new features, please open an issue or submit a pull request. [1]
