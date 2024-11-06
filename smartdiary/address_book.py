@@ -23,6 +23,22 @@ class Field:
 class Name(Field):
     def __init__(self, name):
         super().__init__(name)
+        
+# Клас для адреси контакту, успадковує Field
+class Address(Field):
+    def __init__(self, address):
+        super().__init__(address)
+
+# Клас для електронної пошти з валідацією формату
+class Email(Field):
+    def __init__(self, email):
+        super().__init__(email)
+        if not self.__validate():
+            raise ValueError("Invalid email format.")
+
+    def __validate(self) -> bool:
+        # Валідація формату email
+        return bool(re.fullmatch(r"[^@]+@[^@]+\.[^@]+", self.value))
 
 
 """ валідацію номера телефону (має бути перевірка на 10 цифр) """
@@ -43,17 +59,22 @@ class Phone(Field):
 Реалізовано методи для додавання - add_phone/видалення - remove_phone/редагування - 
 edit_phone/пошуку об'єктів Phone - find_phone.
 """
+# Клас для зберігання інформації про контакт
 class Record:
-    def __init__(self, name):
-        self.name = Name(name)
-        self.phones = []
-        self.birthday = None
-
+    def __init__(self, name, address=None, email=None, birthday=None):
+        self.name = Name(name)  # Ім'я контакту
+        self.phones = []  # Список телефонних номерів
+        self.address = Address(address) if address else None  # Адреса контакту
+        self.email = Email(email) if email else None  # Електронна пошта
+        self.birthday = Birthday(birthday) if birthday else None  # День народження
 
     def __str__(self):
-        birthday = datetime.strftime(self.birthday.birthday, "%d.%m.%Y") if self.birthday != None else "No info"
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, \
-birthday: {birthday}"
+        # Формування рядкового представлення контакту
+        birthday = self.birthday.birthday.strftime("%d.%m.%Y") if self.birthday else "No info"
+        address = self.address.value if self.address else "No info"
+        email = self.email.value if self.email else "No info"
+        phones = "; ".join(p.value for p in self.phones)
+        return f"Name: {self.name.value}, Phones: {phones}, Address: {address}, Email: {email}, Birthday: {birthday}"
 
 
     def add_birthday(self, birthday : str):
@@ -79,6 +100,19 @@ birthday: {birthday}"
                 self.phones[i] = Phone(new_phone)
                 return "Phone updated."
         return "Phone not found."
+    
+    # Редагування адреси
+    def edit_address(self, new_address: str):
+        self.address = Address(new_address)
+        return "Address updated."
+
+    # Редагування електронної пошти з валідацією
+    def edit_email(self, new_email: str):
+        try:
+            self.email = Email(new_email)
+            return "Email updated."
+        except ValueError as e:
+            return str(e)
 
 
     def find_phone(self, phone: str) -> str:
@@ -92,6 +126,8 @@ birthday: {birthday}"
         result = Record(self.name)
 
         result.phones = self.phones
+        result.address = self.address
+        result.email = self.email
         result.birthday = Birthday(self.birthday.birthday.strftime("%d.%m.%Y"))
 
         return result
