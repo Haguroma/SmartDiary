@@ -85,7 +85,7 @@ def add_contact(args : list[str], book : AddressBook) -> str:
         return "Contact added."
     
 @input_error
-@email_input_error
+#@email_input_error
 def add_email(args: list[str], book: AddressBook) -> str:
     if len(args) < 2:
         raise ValueError("Please enter 2 arguments: |name| |email|")
@@ -101,7 +101,7 @@ def add_email(args: list[str], book: AddressBook) -> str:
 
 
 @input_error
-@address_input_error
+#@address_input_error
 def add_address(args: list[str], book: AddressBook) -> str:
     if len(args) < 2:
         raise ValueError("Please enter 2 arguments: |name| |address|")
