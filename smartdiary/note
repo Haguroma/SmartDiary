@@ -1,0 +1,18 @@
+class Note:
+    def __init__(self, content, tags=None):
+        self.content = content
+        self.tags = set(tags) if tags else set()
+        self.created_at = datetime.now()
+
+    def add_tag(self, tag):
+        """Додає тег до нотатки."""
+        self.tags.add(tag)
+
+    def remove_tag(self, tag):
+        """Видаляє тег з нотатки, якщо він існує."""
+        if tag in self.tags:
+            self.tags.remove(tag)
+
+    def __str__(self):
+        """Повертає текст нотатки та її теги у вигляді рядка."""
+        return f"{self.content} | Tags: {', '.join(self.tags)}"
