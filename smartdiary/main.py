@@ -258,6 +258,11 @@ def search_notes(args, notes):
     pass
 
 
+def show_notes(args, notes):
+    pass
+
+
+
 def helper():
     #створюємо таблицю - довідник, що наш бот вміє виконувати наступні команди:
     table_help = PrettyTable()
@@ -280,6 +285,7 @@ def helper():
     table_help.add_row(["edit-note", "Edit a note for a contact"])
     table_help.add_row(["delete-note", "Delete a note for a contact"])
     table_help.add_row(["search-notes", "Search notes by keyword"])
+    table_help.add_row(["notes", "Show all notes"])
 
     print(table_help)
     
@@ -290,7 +296,7 @@ def main() :
     notes = load_notes()
 
     # ініціалізація списку команд-підказок
-    command_completer = WordCompleter(['exit','close','add','all','phone','change','add-birthday', 'add-phone', 'birthdays', 'show-birthday', 'add_email', 'add_address', 'add-note', 'edit-note', 'delete-note', 'search-notes'])
+    command_completer = WordCompleter(['exit','close','add','all','phone','change','add-birthday', 'add-phone', 'birthdays', 'show-birthday', 'add_email', 'add_address', 'add-note', 'edit-note', 'delete-note', 'notes', 'search-notes'])
     # вітаємо користувача
     print(Fore.BLUE + "Welcome to the assistant bot!")  
 
@@ -386,6 +392,16 @@ def main() :
 
         elif command == "search-notes":
             print(search_notes(args, notes))
+
+        elif command == "notes":
+            if book:
+                for record in notes.data:
+                    #birthday = datetime.strftime(book.data[record].birthday.birthday, "%d.%m.%Y") if book.data[record].birthday != None else "No info"
+                    notes_table.add_row([notes.data[record].content, notes.data[record].tags, notes.data[record].created_at])
+                print(notes_table)
+            else: 
+                print("No contacts")
+
 
         else:
             print("Invalid command.")
