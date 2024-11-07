@@ -47,6 +47,4 @@ class NotesBook:
             return "Tag removed from note."
         return "Note not found."
 
-    def show_all_notes(self):
-        """Відображає всі нотатки з їхніми тегами."""
-        return "\n".join(str(note) for note in self.notes)
+    
