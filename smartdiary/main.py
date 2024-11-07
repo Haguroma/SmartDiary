@@ -394,7 +394,7 @@ def main() :
             print(search_notes(args, notes))
 
         elif command == "notes":
-            if book:
+            if notes:
                 for record in notes.data:
                     #birthday = datetime.strftime(book.data[record].birthday.birthday, "%d.%m.%Y") if book.data[record].birthday != None else "No info"
                     notes_table.add_row([notes.data[record].content, notes.data[record].tags, notes.data[record].created_at])
@@ -407,7 +407,7 @@ def main() :
             print("Invalid command.")
     
     save_data(book)
-    save_data(notes)
+    save_notes(notes)
 
 if __name__ == "__main__":
     main()
