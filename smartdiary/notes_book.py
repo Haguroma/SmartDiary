@@ -1,12 +1,9 @@
-
-
-import uuid
 from collections import UserDict
 from datetime import datetime
 
 class Note:
-    def __init__(self, content):
-        self.id = str(uuid.uuid4())  # Автоматично генерується унікальний ідентифікатор
+    def __init__(self, note_id, content):
+        self.id = note_id 
         self.content = content  # Текст нотатки
         self.tags = set()  # Множина тегів
         self.created_at = datetime.now()  # Дата створення
@@ -22,41 +19,51 @@ class Note:
 
     def __str__(self):
         tags = ', '.join(self.tags) if self.tags else "No tags"
-        return f"ID: {self.id}\nContent: {self.content}\nTags: {tags}\nCreated at: {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}"
+        return f"ID: {self.id}\nContent: {self.content}\nTags: {tags}\nCreated at: {self.created_at.strftime('%d-%m-%Y %H:%M')}"
 
 
 class NotesBook(UserDict):
-    def add_note(self, content):
+    def __init__(self):
+        super().__init__()
+        self.next_id = 1
+
+    def add_note(self, content) -> str:
         """Додає нову нотатку з автоматичним унікальним ідентифікатором."""
-        note = Note(content)
-        self.data[note.id] = note  # Використовуємо автоматично згенерований id як ключ
-        return f"Note added with ID: {note.id}"
+        note = Note(self.next_id, content)
+        self.data[self.next_id] = note  # Використовуємо автоматично згенерований id як ключ
+        self.next_id += 1
+        return f"Note added with ID: {int(self.next_id)-1}"
 
     def edit_note_content(self, note_id, new_content):
         """Редагує текст нотатки за її унікальним ідентифікатором."""
-        if note_id in self.data:
-            self.data[note_id].content = new_content
+        if int(note_id) in self:
+            self[int(note_id)].content = new_content
             return "Note content updated."
         return "Note not found."
+    
+    def search_notes_by_content(self, text : str):
+        """Шукає всі нотатки, що містять заданий text."""
+        return [note for note in self.data.values() if text in note.content]
 
     def delete_note(self, note_id):
         """Видаляє нотатку за її унікальним ідентифікатором."""
-        if note_id in self.data:
-            del self.data[note_id]
+        id = int(note_id)
+        if int(id) in self.data:
+            del self.data[id]
             return "Note deleted."
         return "Note not found."
 
     def add_tag_to_note(self, note_id, tag):
         """Додає тег до нотатки за унікальним ідентифікатором."""
-        if note_id in self.data:
-            self.data[note_id].add_tag(tag)
+        if int(note_id) in self.data:
+            self.data[int(note_id)].add_tag(tag)
             return "Tag added to note."
         return "Note not found."
 
     def remove_tag_from_note(self, note_id, tag):
         """Видаляє тег з нотатки за унікальним ідентифікатором."""
-        if note_id in self.data:
-            self.data[note_id].remove_tag(tag)
+        if int(note_id) in self.data:
+            self.data[int(note_id)].remove_tag(tag)
             return "Tag removed from note."
         return "Note not found."
 

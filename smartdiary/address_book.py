@@ -243,6 +243,7 @@ class AddressBook(UserDict):
 
 
     def delete(self, name : str): # видаляє запис за ім'ям.
+
         if name in self.data:
             del self.data[name]
             return "Record deleted."

@@ -16,7 +16,7 @@ def parse_input(user_input):
     cmd = cmd.strip().lower()
     return cmd, *args
 
-
+'''save and load notes'''
 def save_notes(book, filename : str = "notesbook.pkl"):
     path_ext = os.path.expanduser("~")
     curr_path = os.path.join(path_ext, filename)
@@ -25,7 +25,7 @@ def save_notes(book, filename : str = "notesbook.pkl"):
         pickle.dump(book, f)
 
 
-def load_notes(filename : str = "notesbook.pkl"):
+def load_notes(filename : str = "notesbook.pkl") -> NotesBook:
     path_ext = os.path.expanduser("~")
     curr_path = os.path.join(path_ext, filename)
     
@@ -36,6 +36,7 @@ def load_notes(filename : str = "notesbook.pkl"):
         return NotesBook()  # Повернення нової адресної книги, якщо файл не знайдено
 
 
+'''save and load address book'''
 def save_data(book, filename : str = "addressbook.pkl"):
     path_ext = os.path.expanduser("~")
     curr_path = os.path.join(path_ext, filename)
@@ -54,7 +55,7 @@ def load_data(filename : str = "addressbook.pkl"):
     except FileNotFoundError:
         return AddressBook()  # Повернення нової адресної книги, якщо файл не знайдено
 
-'''decorator'''
+'''decorator for address book'''
 def input_error(func):
     def inner(*args, **kwargs):
         try:
@@ -117,6 +118,16 @@ def add_contact(args : list[str], book : AddressBook) -> str:
         book.add_record(new_record)   
         return "Contact added."
     
+@input_error
+def delete_contact(args : list[str], book : AddressBook) -> str:
+    if len(args) < 1:
+        raise ValueError("Please enter argument: |name|")
+    
+    name = args[0]
+
+    book.delete(name)
+    return "Contact deleted."
+
 
 @email_input_error
 def add_email(args: list[str], book: AddressBook) -> str:
@@ -235,32 +246,58 @@ def get_upcoming_birthdays(args : list[str], book : AddressBook) -> AddressBook:
         return congrat_book
     else:
         return None
-    
+
+
 @input_error
-def add_note(args, notes) -> str:
+def add_note(args, notes : NotesBook) -> str:
     if len(args) < 1:
         raise ValueError("Please enter argument: |note|")
+
+    return notes.add_note(args[0])  
+
+@input_error
+def edit_note(args, notes) -> str:
+    if len(args) < 1:
+        raise ValueError("Please enter 2 arguments: |Note ID| |New content|")
+
+    return  notes.edit_note_content(args[0], args[1]) 
+
+@input_error
+def delete_note(args, notes) -> str:
+    if len(args) < 1:
+        raise ValueError("Please provide |Note ID|")
+
+    index = int(args[0])
+    return notes.delete_note(index)  
+
+@input_error
+def search_notes(args, notes) -> NotesBook:
+    if len(args) < 1:
+        raise ValueError("Please enter argument: |Word(s)|")
+
+    return notes.search_notes_by_content(args[0]) 
+
+
+@input_error
+def add_tag(args, notes) -> str:
+    if len(args) < 1:
+        raise ValueError("Please enter argument: |Note ID| |tag|")
+
+    return notes.add_tag_to_note(args[0], args[1]) 
+
+@input_error
+def remove_tag(args, notes) -> str:
+    if len(args) < 2:
+        raise ValueError("Please enter argument: |Note ID| |tag|")
+    return (notes.remove_tag_from_note(args[0], args[1]))
+
+
+@input_error
+def find_by_tag(args, notes) -> list:
+    if len(args) < 1:
+        raise ValueError("Please enter argument: |tag|")
     
-    new_record = Note(args[0])
-    notes.add_note(new_record)   
-    
-    return "Note added."
-
-def edit_note(args, notes):
-    pass
-
-
-def delete_note(args, notes):
-    pass
-
-
-def search_notes(args, notes):
-    pass
-
-
-def show_notes(args, notes):
-    pass
-
+    return (notes.search_notes_by_tag(args[0]))
 
 
 def helper():
@@ -271,9 +308,10 @@ def helper():
     table_help.add_row(["close", "Exit the program"])
     table_help.add_row(["help", "Show this help"])
     table_help.add_row(["exit", "Exit the program"])
-    table_help.add_row(["add", "Add a new contact"])
+    table_help.add_row(["add", "Add new contact"])
+    table_help.add_row(["delete", "Delete contact"])
     table_help.add_row(["all", "Show all contacts"])
-    table_help.add_row(["phone", "Show a contact's phone number"])
+    table_help.add_row(["phone", "Show contact's phone number"])
     table_help.add_row(["change", "Change a contact's phone number"])
     table_help.add_row(["add-birthday", "Add a birthday to a contact"])
     table_help.add_row(["add_phone", "Add a phone to a contact"])
@@ -286,6 +324,8 @@ def helper():
     table_help.add_row(["delete-note", "Delete a note for a contact"])
     table_help.add_row(["search-notes", "Search notes by keyword"])
     table_help.add_row(["notes", "Show all notes"])
+    table_help.add_row(["remove-tag", "Remove tag from note"])
+    table_help.add_row(["find-by-tag", "Find notes by tag"])
 
     print(table_help)
     
@@ -296,7 +336,7 @@ def main() :
     notes = load_notes()
 
     # ініціалізація списку команд-підказок
-    command_completer = WordCompleter(['exit','close','add','all','phone','change','add-birthday', 'add-phone', 'birthdays', 'show-birthday', 'add_email', 'add_address', 'add-note', 'edit-note', 'delete-note', 'notes', 'search-notes'])
+    command_completer = WordCompleter(['exit','close','add', 'delete','all','phone','change','add-birthday', 'add-phone', 'birthdays', 'show-birthday', 'add_email', 'add_address', 'add-note', 'edit-note', 'delete-note', 'notes', 'search-notes', 'find-by-tag', 'add-tag', 'remove-tag'])
     # вітаємо користувача
     print(Fore.BLUE + "Welcome to the assistant bot!")  
 
@@ -312,7 +352,7 @@ def main() :
         table.field_names = ["Name", "Phone", "email", "Address","Birthday"]
 
         notes_table = PrettyTable()
-        notes_table.field_names = ["Note", "Tags", "Creation Time"]
+        notes_table.field_names = ["Note ID", "Note", "Tags", "Creation Time"]
 
         
         command, *args = parse_input(text.strip().lower())
@@ -337,13 +377,16 @@ def main() :
         #  За цією командою бот зберігає у пам'яті, наприклад у словнику, новий контакт. 
         elif command == "add":
             print(add_contact(args, book))
+
+        elif command == "delete":
+            print(delete_contact(args, book))
  
         #За цією командою бот виводить всі збереженні контакти з номерами телефонів у консоль
         elif command == "all":
             if book:
                 for record in book.data:
                     birthday = datetime.strftime(book.data[record].birthday.birthday, "%d.%m.%Y") if book.data[record].birthday != None else "No info"
-                    table.add_row([book.data[record].name.value, '; '.join(p.value for p in book.data[record].phones), birthday])
+                    table.add_row([book.data[record].name.value, '; '.join(p.value for p in book.data[record].phones), book.data[record].email.value if book.data[record].email != None else "No info", book.data[record].address.value if book.data[record].address != None else "No info", birthday])
                 print(table)
             else: 
                 print("No contacts")
@@ -352,7 +395,7 @@ def main() :
         elif command == "phone":
             record = show_phone(args, book)
             birthday = datetime.strftime(record.birthday.birthday, "%d.%m.%Y") if record.birthday != None else "No info"
-            table.add_row([record.name.value, '; '.join(p.value for p in record.phones), birthday])
+            table.add_row([record.name.value, '; '.join(p.value for p in record.phones), record.email.value if record.email != None else "No info", record.address.value if record.address != None else "No info", birthday])
             print(table) 
 
         # За цією командою бот зберігає в пам'яті новий номер телефону phone для контакту username, що вже існує в записнику.
@@ -375,14 +418,31 @@ def main() :
                     contact = congrat_list.data[record]
                     name = contact.name.value
                     phone = ';'.join(p.value for p in contact.phones)
+                    email = contact.email.value if record.email != None else "No info"
+                    address = contact.address.value if record.address != None else "No info"
                     birthday = datetime.strftime(contact.birthday.birthday, "%d.%m.%Y") if contact.birthday != None else "No info"
-                    table.add_row([name, phone, birthday])
+                    table.add_row([name, phone, email, address, birthday])
                 print(table)
             else:
                 print("Nobody to congrat")
 
         elif command == "add-note":
             print(add_note(args, notes))
+
+        elif command == "add-tag":
+            print(add_tag(args, notes))
+
+        elif command == "remove-tag":
+            print(remove_tag(args, notes))
+
+        elif command == "find-by-tag":
+            temp_notes = find_by_tag(args, notes)
+            if len(temp_notes) > 0:
+                for record in temp_notes:
+                    notes_table.add_row([record.id, record.content if record != None else "No info", record.tags if record != None else "No info", record.created_at if record != None else "No info"])
+                print(notes_table)  
+            else:
+                print("No such notes")          
 
         elif command == "edit-note":
             print(edit_note(args, notes))
@@ -391,13 +451,18 @@ def main() :
             print(delete_note(args, notes))
 
         elif command == "search-notes":
-            print(search_notes(args, notes))
+            temp_notes = search_notes(args, notes)
+            if len(temp_notes) > 0:         
+                for record in temp_notes:
+                    notes_table.add_row([record.id, record.content if record != None else "No info", record.tags if record != None else "No info", record.created_at if record != None else "No info"])
+                print(notes_table)
+            else:
+                print("No notes")
 
         elif command == "notes":
-            if notes:
+            if isinstance(notes, NotesBook):
                 for record in notes.data:
-                    #birthday = datetime.strftime(book.data[record].birthday.birthday, "%d.%m.%Y") if book.data[record].birthday != None else "No info"
-                    notes_table.add_row([notes.data[record].content, notes.data[record].tags, notes.data[record].created_at])
+                     notes_table.add_row([notes.data[record].id, notes.data[record].content if notes.data[record] != None else "No info", notes.data[record].tags if notes.data[record] != None else "No info", notes.data[record].created_at if notes.data[record] != None else "No info"])
                 print(notes_table)
             else: 
                 print("No contacts")
