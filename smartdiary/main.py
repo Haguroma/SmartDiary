@@ -241,13 +241,8 @@ def add_note(args, notes) -> str:
     if len(args) < 1:
         raise ValueError("Please enter argument: |note|")
     
-    record = notes.find(args[0])
-
-    if isinstance(record, Note):
-        return "Note existed."
-    else:
-        new_record = Note(text)
-        notes.add_note(new_record)   
+    new_record = Note(args[0])
+    notes.add_note(new_record)   
     
     return "Note added."
 
