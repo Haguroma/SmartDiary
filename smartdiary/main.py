@@ -1,5 +1,6 @@
 import re, pickle, os
 from smartdiary.address_book import *
+from smartdiary.notes_book import *
 
 from colorama import Fore, Style
 from prettytable import PrettyTable
@@ -37,6 +38,24 @@ def input_error(func):
             return #(f"Error {e}.")
 
     return inner
+
+def save_notes(book, filename : str = "notesbook.pkl"):
+    path_ext = os.path.expanduser("~")
+    curr_path = os.path.join(path_ext, filename)
+
+    with open(curr_path, "wb") as f:
+        pickle.dump(book, f)
+
+
+def load_notes(filename : str = "notesbook.pkl"):
+    path_ext = os.path.expanduser("~")
+    curr_path = os.path.join(path_ext, filename)
+    
+    try:
+        with open(curr_path, "rb") as f:
+            return pickle.load(f)
+    except FileNotFoundError:
+        return NotesBook()  # Повернення нової адресної книги, якщо файл не знайдено
 
 
 def save_data(book, filename : str = "addressbook.pkl"):
@@ -84,38 +103,6 @@ def add_contact(args : list[str], book : AddressBook) -> str:
         book.add_record(new_record)   
         return "Contact added."
     
-@input_error
-#@email_input_error
-def add_email(args: list[str], book: AddressBook) -> str:
-    if len(args) < 2:
-        raise ValueError("Please enter 2 arguments: |name| |email|")
-    
-    name, email = args
-    record = book.find(name)
-
-    if isinstance(record, Record):
-        record.edit_email(email)
-        return "Email added."
-    else:
-        return "Name not found."
-
-
-@input_error
-#@address_input_error
-def add_address(args: list[str], book: AddressBook) -> str:
-    if len(args) < 2:
-        raise ValueError("Please enter 2 arguments: |name| |address|")
-    
-    name, address = args
-    record = book.find(name)
-
-    if isinstance(record, Record):
-        record.edit_address(address)
-        return "Address added."
-    else:
-        return "Name not found."
-
-
 # декоратор для обробки помилок введення електронної пошти
 def email_input_error(func):
     def inner(*args, **kwargs):
@@ -139,6 +126,36 @@ def address_input_error(func):
             else:
                 raise e
     return inner  
+
+@email_input_error
+def add_email(args: list[str], book: AddressBook) -> str:
+    if len(args) < 2:
+        raise ValueError("Please enter 2 arguments: |name| |email|")
+    
+    name, email = args
+    record = book.find(name)
+
+    if isinstance(record, Record):
+        record.edit_email(email)
+        return "Email added."
+    else:
+        return "Name not found."
+
+
+@address_input_error
+def add_address(args: list[str], book: AddressBook) -> str:
+    if len(args) < 2:
+        raise ValueError("Please enter 2 arguments: |name| |address|")
+    
+    name, address = args
+    record = book.find(name)
+
+    if isinstance(record, Record):
+        record.edit_address(address)
+        return "Address added."
+    else:
+        return "Name not found."
+
 
 @input_error
 def add_phone(args : list[str], book : AddressBook) -> str:
@@ -257,6 +274,7 @@ def helper():
 def main() :
     # завантажимо або новый зробимо словник Python для зберігання імен і номерів телефонів. Ім'я буде ключем, а номер телефону – значенням.
     book = load_data()
+    notes = load_notes()
 
     # ініціалізація списку команд-підказок
     command_completer = WordCompleter(['exit','close','add','all','phone','change','add-birthday', 'add-phone', 'birthdays', 'show-birthday', 'add_email', 'add_address'])
@@ -270,8 +288,13 @@ def main() :
     while True:
         print("\n")
         text = prompt("Enter a command: ", completer=command_completer)
+
         table = PrettyTable()
-        table.field_names = ["Name", "Phone", "Birthday"]
+        table.field_names = ["Name", "Phone", "email", "Address","Birthday"]
+
+        notes_table = PrettyTable()
+        notes_table.field_names = ["Note", "Tags", "Creation Time"]
+
         
         command, *args = parse_input(text.strip().lower())
 
@@ -338,6 +361,18 @@ def main() :
                 print(table)
             else:
                 print("Nobody to congrat")
+
+        elif command == "add-note":
+            print(add_note(args, notes))
+
+        elif command == "edit-note":
+            print(edit_note(args, notes))
+
+        elif command == "delete-note":
+            print(delete_note(args, notes))
+
+        elif command == "search-notes":
+            print(search_notes(args, notes))
 
         else:
             print("Invalid command.")
