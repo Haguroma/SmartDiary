@@ -7,37 +7,15 @@ from prettytable import PrettyTable
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
-# from prompt_toolkit import prompt
+'''
+розбиратиме введений користувачем рядок на команду та її аргументи. 
+Команди та аргументи мають бути розпізнані незалежно від регістру введення.
+'''
+def parse_input(user_input):
+    cmd, *args = user_input.split()
+    cmd = cmd.strip().lower()
+    return cmd, *args
 
-# text = prompt('Give me some input: ')
-# print('You said: %s' % text)
-
-# from prompt_toolkit.shortcuts import message_dialog
-
-# message_dialog(
-#     title='Example dialog window',
-#     text='Do you want to continue?\nPress ENTER to quit.').run()
-
-
-
-'''decorator'''
-def input_error(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except KeyError as e:
-            print(Fore.BLUE + f"Error {e}.")
-            return #(f"Error {e}.")
-
-        except IndexError as e:
-            print(Fore.GREEN + f"Error {e}.")
-            return# (f"Error {e}.")
-
-        except ValueError as e:
-            print(Fore.RED + f"Error {e}.")
-            return #(f"Error {e}.")
-
-    return inner
 
 def save_notes(book, filename : str = "notesbook.pkl"):
     path_ext = os.path.expanduser("~")
@@ -76,14 +54,50 @@ def load_data(filename : str = "addressbook.pkl"):
     except FileNotFoundError:
         return AddressBook()  # Повернення нової адресної книги, якщо файл не знайдено
 
-'''
-розбиратиме введений користувачем рядок на команду та її аргументи. 
-Команди та аргументи мають бути розпізнані незалежно від регістру введення.
-'''
-def parse_input(user_input):
-    cmd, *args = user_input.split()
-    cmd = cmd.strip().lower()
-    return cmd, *args
+'''decorator'''
+def input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except KeyError as e:
+            print(Fore.BLUE + f"Error {e}.")
+            return #(f"Error {e}.")
+
+        except IndexError as e:
+            print(Fore.GREEN + f"Error {e}.")
+            return# (f"Error {e}.")
+
+        except ValueError as e:
+            print(Fore.RED + f"Error {e}.")
+            return #(f"Error {e}.")
+
+    return inner
+
+
+# декоратор для обробки помилок введення електронної пошти
+def email_input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError as e:
+            if "email" in str(e).lower():
+                print(Fore.RED + "Invalid email format. Please enter a valid email address.")
+            else:
+                raise e
+    return inner
+
+
+# декоратор для обробки помилок введення адреси
+def address_input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError as e:
+            if "address" in str(e).lower():
+                print(Fore.RED + "Invalid address format. Please enter a valid address.")
+            else:
+                raise e
+    return inner  
 
 
 @input_error
@@ -103,29 +117,6 @@ def add_contact(args : list[str], book : AddressBook) -> str:
         book.add_record(new_record)   
         return "Contact added."
     
-# декоратор для обробки помилок введення електронної пошти
-def email_input_error(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError as e:
-            if "email" in str(e).lower():
-                print(Fore.RED + "Invalid email format. Please enter a valid email address.")
-            else:
-                raise e
-    return inner
-
-# декоратор для обробки помилок введення адреси
-def address_input_error(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError as e:
-            if "address" in str(e).lower():
-                print(Fore.RED + "Invalid address format. Please enter a valid address.")
-            else:
-                raise e
-    return inner  
 
 @email_input_error
 def add_email(args: list[str], book: AddressBook) -> str:
@@ -245,6 +236,7 @@ def get_upcoming_birthdays(args : list[str], book : AddressBook) -> AddressBook:
     else:
         return None
     
+@input_error
 def add_note(args, notes) -> str:
     if len(args) < 1:
         raise ValueError("Please enter argument: |note|")
@@ -256,24 +248,16 @@ def add_note(args, notes) -> str:
     else:
         new_record = Note(text)
         notes.add_note(new_record)   
-        return "Note added."
+    
+    return "Note added."
 
 def edit_note(args, notes):
     pass
-    # if len(args) < 2:
-    #     raise ValueError("Please enter argument: |note|")
-    
-    # record = notes.find(args[0])
 
-    # if isinstance(record, Note):
-    #     return "Note existed."
-    # else:
-    #     new_record = Note(text)
-    #     notes.add_note(new_record)   
-    #     return "Note added."
 
 def delete_note(args, notes):
     pass
+
 
 def search_notes(args, notes):
     pass
@@ -311,7 +295,7 @@ def main() :
     notes = load_notes()
 
     # ініціалізація списку команд-підказок
-    command_completer = WordCompleter(['exit','close','add','all','phone','change','add-birthday', 'add-phone', 'birthdays', 'show-birthday', 'add_email', 'add_address'])
+    command_completer = WordCompleter(['exit','close','add','all','phone','change','add-birthday', 'add-phone', 'birthdays', 'show-birthday', 'add_email', 'add_address', 'add-note', 'edit-note', 'delete-note', 'search-notes'])
     # вітаємо користувача
     print(Fore.BLUE + "Welcome to the assistant bot!")  
 
@@ -412,6 +396,7 @@ def main() :
             print("Invalid command.")
     
     save_data(book)
+    save_data(notes)
 
 if __name__ == "__main__":
     main()
