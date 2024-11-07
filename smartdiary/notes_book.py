@@ -1,4 +1,5 @@
 from datetime import datetime
+from collections import UserDict
 
 class Note:
     def __init__(self, content, tags=None):
