@@ -245,11 +245,32 @@ def get_upcoming_birthdays(args : list[str], book : AddressBook) -> AddressBook:
     else:
         return None
     
-def add_note(args, notes):
-    pass
+def add_note(args, notes) -> str:
+    if len(args) < 1:
+        raise ValueError("Please enter argument: |note|")
+    
+    record = notes.find(args[0])
+
+    if isinstance(record, Note):
+        return "Note existed."
+    else:
+        new_record = Note(text)
+        notes.add_note(new_record)   
+        return "Note added."
 
 def edit_note(args, notes):
     pass
+    # if len(args) < 2:
+    #     raise ValueError("Please enter argument: |note|")
+    
+    # record = notes.find(args[0])
+
+    # if isinstance(record, Note):
+    #     return "Note existed."
+    # else:
+    #     new_record = Note(text)
+    #     notes.add_note(new_record)   
+    #     return "Note added."
 
 def delete_note(args, notes):
     pass
