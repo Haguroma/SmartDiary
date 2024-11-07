@@ -5,7 +5,7 @@ from colorama import Fore, Style
 from prettytable import PrettyTable
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
-
+from datetime import datetime
 # from prompt_toolkit import prompt
 
 # text = prompt('Give me some input: ')
@@ -227,6 +227,59 @@ def get_upcoming_birthdays(args : list[str], book : AddressBook) -> AddressBook:
         return congrat_book
     else:
         return None
+# Notes management functions
+@input_error
+def add_note_command(args: list[str], book: AddressBook) -> str:
+    if len(args) < 2:
+        raise ValueError("Please provide both name and note content.")
+    
+    name, note = args[0], ' '.join(args[1:])
+    record = book.find(name)
+
+    if isinstance(record, Record):
+        record.add_note(note)
+        return "Note added."
+    return "Contact not found."
+
+@input_error
+def edit_note_command(args: list[str], book: AddressBook) -> str:
+    if len(args) < 3:
+        raise ValueError("Please provide name, note index, and new content.")
+    
+    name, index, new_note = args[0], int(args[1]), ' '.join(args[2:])
+    record = book.find(name)
+
+    if isinstance(record, Record):
+        record.edit_note(index, new_note)
+        return "Note edited."
+    return "Contact not found."
+
+@input_error
+def delete_note_command(args: list[str], book: AddressBook) -> str:
+    if len(args) < 2:
+        raise ValueError("Please provide name and note index.")
+    
+    name, index = args[0], int(args[1])
+    record = book.find(name)
+
+    if isinstance(record, Record):
+        record.delete_note(index)
+        return "Note deleted."
+    return "Contact not found."
+
+@input_error
+def search_notes_command(args: list[str], book: AddressBook) -> str:
+    if len(args) < 2:
+        raise ValueError("Please provide name and keyword for search.")
+    
+    name, keyword = args[0], args[1]
+    record = book.find(name)
+
+    if isinstance(record, Record):
+        results = record.search_notes(keyword)
+        return f"Notes found: {results}" if results else "No matching notes found."
+    return "Contact not found."
+    
     
 def helper():
     #створюємо таблицю - довідник, що наш бот вміє виконувати наступні команди:
@@ -246,7 +299,11 @@ def helper():
     table_help.add_row(["add_address", "Add an address to a contact"])
     table_help.add_row(["birthdays", "List of employees to congratulate"])
     table_help.add_row(["show-birthday", "Show a contact's birthday"])
-
+    table_help.add_row(["add-note", "Add a note for a contact"])
+    table_help.add_row(["edit-note", "Edit a note for a contact"])
+    table_help.add_row(["delete-note", "Delete a note for a contact"])
+    table_help.add_row(["search-notes", "Search notes by keyword"])
+    
     print(table_help)
     
 
