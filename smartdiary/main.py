@@ -5,7 +5,7 @@ from colorama import Fore, Style
 from prettytable import PrettyTable
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
-from datetime import datetime
+
 # from prompt_toolkit import prompt
 
 # text = prompt('Give me some input: ')
@@ -37,30 +37,6 @@ def input_error(func):
             return #(f"Error {e}.")
 
     return inner
-
-# декоратор для обробки помилок введення електронної пошти
-def email_input_error(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError as e:
-            if "email" in str(e).lower():
-                print(Fore.RED + "Invalid email format. Please enter a valid email address.")
-            else:
-                raise e
-    return inner
-
-# декоратор для обробки помилок введення адреси
-def address_input_error(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError as e:
-            if "address" in str(e).lower():
-                print(Fore.RED + "Invalid address format. Please enter a valid address.")
-            else:
-                raise e
-    return inner  
 
 
 def save_data(book, filename : str = "addressbook.pkl"):
@@ -139,6 +115,30 @@ def add_address(args: list[str], book: AddressBook) -> str:
     else:
         return "Name not found."
 
+
+# декоратор для обробки помилок введення електронної пошти
+def email_input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError as e:
+            if "email" in str(e).lower():
+                print(Fore.RED + "Invalid email format. Please enter a valid email address.")
+            else:
+                raise e
+    return inner
+
+# декоратор для обробки помилок введення адреси
+def address_input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError as e:
+            if "address" in str(e).lower():
+                print(Fore.RED + "Invalid address format. Please enter a valid address.")
+            else:
+                raise e
+    return inner  
 
 @input_error
 def add_phone(args : list[str], book : AddressBook) -> str:
@@ -227,59 +227,6 @@ def get_upcoming_birthdays(args : list[str], book : AddressBook) -> AddressBook:
         return congrat_book
     else:
         return None
-# Notes management functions
-@input_error
-def add_note_command(args: list[str], book: AddressBook) -> str:
-    if len(args) < 2:
-        raise ValueError("Please provide both name and note content.")
-    
-    name, note = args[0], ' '.join(args[1:])
-    record = book.find(name)
-
-    if isinstance(record, Record):
-        record.add_note(note)
-        return "Note added."
-    return "Contact not found."
-
-@input_error
-def edit_note_command(args: list[str], book: AddressBook) -> str:
-    if len(args) < 3:
-        raise ValueError("Please provide name, note index, and new content.")
-    
-    name, index, new_note = args[0], int(args[1]), ' '.join(args[2:])
-    record = book.find(name)
-
-    if isinstance(record, Record):
-        record.edit_note(index, new_note)
-        return "Note edited."
-    return "Contact not found."
-
-@input_error
-def delete_note_command(args: list[str], book: AddressBook) -> str:
-    if len(args) < 2:
-        raise ValueError("Please provide name and note index.")
-    
-    name, index = args[0], int(args[1])
-    record = book.find(name)
-
-    if isinstance(record, Record):
-        record.delete_note(index)
-        return "Note deleted."
-    return "Contact not found."
-
-@input_error
-def search_notes_command(args: list[str], book: AddressBook) -> str:
-    if len(args) < 2:
-        raise ValueError("Please provide name and keyword for search.")
-    
-    name, keyword = args[0], args[1]
-    record = book.find(name)
-
-    if isinstance(record, Record):
-        results = record.search_notes(keyword)
-        return f"Notes found: {results}" if results else "No matching notes found."
-    return "Contact not found."
-    
     
 def helper():
     #створюємо таблицю - довідник, що наш бот вміє виконувати наступні команди:
@@ -303,7 +250,7 @@ def helper():
     table_help.add_row(["edit-note", "Edit a note for a contact"])
     table_help.add_row(["delete-note", "Delete a note for a contact"])
     table_help.add_row(["search-notes", "Search notes by keyword"])
-    
+
     print(table_help)
     
 
@@ -313,7 +260,6 @@ def main() :
 
     # ініціалізація списку команд-підказок
     command_completer = WordCompleter(['exit','close','add','all','phone','change','add-birthday', 'add-phone', 'birthdays', 'show-birthday', 'add_email', 'add_address'])
-
     # вітаємо користувача
     print(Fore.BLUE + "Welcome to the assistant bot!")  
 
@@ -325,13 +271,19 @@ def main() :
         print("\n")
         text = prompt("Enter a command: ", completer=command_completer)
         table = PrettyTable()
-        table.field_names = ["Name", "Phone", "Birthday" , "Email", "Address"]
+        table.field_names = ["Name", "Phone", "Birthday"]
         
         command, *args = parse_input(text.strip().lower())
 
         if command in ["close", "exit"]:
             print("Good bye!")
             break
+            
+        elif command == "add_email":
+            print(add_email(args, book))
+            
+        elif command == "add_address":
+            print(add_address(args, book))
 
         #виводимо підказку, що наш бот вміє виконувати наступні команди:
         elif command == "hello":
@@ -367,12 +319,6 @@ def main() :
 
         elif command == "add-phone":
             print(add_phone(args, book))
-            
-        elif command == "add_email":
-            print(add_email(args, book))
-            
-        elif command == "add_address":
-            print(add_address(args, book))
 
         elif command == "add-birthday":
             print(add_birthday(args, book))
