@@ -74,6 +74,21 @@ Name is simple extension of Field
 Phone adds validation to ensure 10-digit format
 Phone validates using regular expression pattern
 
+EMAIL HANDLING
+
+Email class features:
+Stores email addresses as string values
+Validates format upon initialization
+Expects standard email format (e.g., user@example.com)
+Raises ValueError if format is incorrect
+
+ADDRESS HANDLING
+
+Address class features:
+Stores physical address as a string value
+Inherits from Field class for basic storage
+Does not validate format, allowing any address format
+
 BIRTHDAY HANDLING
 Birthday class features:
 Converts string dates to datetime objects
@@ -87,6 +102,8 @@ add_phone()
 remove_phone()
 edit_phone()
 find_phone()
+edit_address()
+edit_email()
 Birthday management with add_birthday()
 
 ADDRESS BOOK CLASS
@@ -119,6 +136,7 @@ KEY FEATURES:
 Phone validation (10 digits)
 Date validation (DD.MM.YYYY)
 Multiple phone numbers per contact
+Email validation (user@example.com)
 Birthday tracking and notifications
 Weekend birthday handling (moves to Monday)
 Contact management (add/remove/edit)
@@ -126,8 +144,36 @@ Contact management (add/remove/edit)
 ERROR HANDLING:
 Phone format validation
 Date format validation
+Email validation
 Record existence checks
 Copy functionality for records
+
+NOTE HANDLING
+
+Note class features:
+Automatically generates a unique ID for each note
+Stores note content as a string
+Allows multiple tags for categorization
+Records the creation date and time
+
+Methods for managing tags
+add_tag(tag): Adds a new tag to the note
+remove_tag(tag): Removes a specific tag if it exists
+
+NOTESBOOK CLASS
+
+NotesBook class features:
+Inherits from UserDict for dictionary-like behavior
+Stores Note objects by their unique ID
+
+Methods
+add_note(content): Adds a new note with unique ID
+edit_note_content(note_id, new_content): Edits content of a note by ID
+delete_note(note_id): Deletes a note by its ID
+add_tag_to_note(note_id, tag): Adds a tag to a specific note by ID
+remove_tag_from_note(note_id, tag): Removes a tag from a specific note by ID
+search_notes_by_tag(tag): Searches for notes containing a specific tag
+show_all_notes(): Displays all notes with their content, tags, and creation date
 
 Note: You can copy this text directly and save it to a .txt file using any text editor while maintaining 
 the formatting
