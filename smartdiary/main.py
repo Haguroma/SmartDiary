@@ -245,6 +245,19 @@ def get_upcoming_birthdays(args : list[str], book : AddressBook) -> AddressBook:
     else:
         return None
     
+def add_note(args, notes):
+    pass
+
+def edit_note(args, notes):
+    pass
+
+def delete_note(args, notes):
+    pass
+
+def search_notes(args, notes):
+    pass
+
+
 def helper():
     #створюємо таблицю - довідник, що наш бот вміє виконувати наступні команди:
     table_help = PrettyTable()
