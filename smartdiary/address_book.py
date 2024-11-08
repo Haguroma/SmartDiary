@@ -136,16 +136,16 @@ class Record:
                 return "Phone updated."
         return "Phone not found."
     
-    # Редагування адреси
-    def edit_address(self, new_address: str):
-        self.address = Address(new_address)
-        return "Address updated."
+   
+    def edit_address(self, address: str):
+        self.address = Address(address)
+        return "Address added/updated."
 
-    # Редагування електронної пошти з валідацією
-    def edit_email(self, new_email: str):
+   
+    def edit_email(self, email: str):
         try:
-            self.email = Email(new_email)
-            return "Email updated."
+            self.email = Email(email)
+            return "Email added/updated."
         except ValueError as e:
             return str(e)
     # def додати_запис(self, назва, текст):

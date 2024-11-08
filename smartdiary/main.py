@@ -1,6 +1,6 @@
 import re, pickle, os
 from smartdiary.address_book import *
-from smartdiary.notes_book import *
+from notes_book import *
 
 from colorama import Fore, Style
 from prettytable import PrettyTable
@@ -75,7 +75,6 @@ def input_error(func):
     return inner
 
 
-# декоратор для обробки помилок введення електронної пошти
 def email_input_error(func):
     def inner(*args, **kwargs):
         try:
@@ -88,7 +87,6 @@ def email_input_error(func):
     return inner
 
 
-# декоратор для обробки помилок введення адреси
 def address_input_error(func):
     def inner(*args, **kwargs):
         try:
@@ -149,7 +147,8 @@ def add_address(args: list[str], book: AddressBook) -> str:
     if len(args) < 2:
         raise ValueError("Please enter 2 arguments: |name| |address|")
     
-    name, address = args
+    name = args[0]
+    address = " ".join(args[1:])
     record = book.find(name)
 
     if isinstance(record, Record):
