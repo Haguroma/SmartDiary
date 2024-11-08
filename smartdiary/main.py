@@ -138,7 +138,8 @@ def add_address(args: list[str], book: AddressBook) -> str:
     if len(args) < 2:
         raise ValueError("Please enter 2 arguments: |name| |address|")
     
-    name, address = args
+    name = args[0]
+    address = " ".join(args[1:])
     record = book.find(name)
 
     if isinstance(record, Record):
