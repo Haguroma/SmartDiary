@@ -21,14 +21,14 @@ dependencies = [ #pip freeze > requirements.txt
     "certifi>=2024.8.30",
     "chardet>=4.0.0",
     "click>=8.1.3",
-    "charset-normalizer==3.4.0",
-    "colorama==0.4.6",
-    "cryptography==40.0.2",
-    "idna==3.10",
-    "prettytable==3.12.0",
-    "prompt_toolkit==3.0.48",
-    "urllib3==2.2.3",
-    "wcwidth==0.2.13"
+    "charset-normalizer>=3.4.0",
+    "colorama>=0.4.6",
+    "cryptography>=40.0.2",
+    "idna>=3.10",
+    "prettytable>=3.12.0",
+    "prompt_toolkit>=3.0.48",
+    "urllib3>=2.2.3",
+    "wcwidth>=0.2.13"
 ]
 
 # Укажите главный модуль для вызова через консоль
