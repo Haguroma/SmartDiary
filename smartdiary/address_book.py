@@ -137,12 +137,12 @@ class Record:
         return "Phone not found."
     
    
-    def add_address(self, address: str):
+    def edit_address(self, address: str):
         self.address = Address(address)
         return "Address added/updated."
 
    
-    def add_email(self, email: str):
+    def edit_email(self, email: str):
         try:
             self.email = Email(email)
             return "Email added/updated."
