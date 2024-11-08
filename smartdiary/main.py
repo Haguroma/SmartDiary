@@ -1,6 +1,6 @@
 import re, pickle, os
 from smartdiary.address_book import *
-from notes_book import *
+from smartdiary.notes_book import *
 
 from colorama import Fore, Style
 from prettytable import PrettyTable
