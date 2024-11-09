@@ -22,7 +22,7 @@ Offers command autocompletion for ease of use.
 Installation
 
 Clone the repository:
-git clone https://github.com/your-username/smartdiary.git
+git clone https://github.com/Haguroma/SmartDiary.git
 cd smartdiary
 
 Create and activate a virtual environment (recommended):
@@ -39,7 +39,9 @@ python -m smartdiary
 
 Follow the on-screen prompts and use the available commands:
 
-| Command | Description | Example | |-----------------|-----------------------------------------------------------|---------------------------------------| | hello | Displays a greeting message. | hello | 
+| Command | Description | Example | 
+|-------------------------------------------------------------|
+| hello | Displays a greeting message. | hello | 
 | add | Adds a new contact. | add John 1234567890 | 
 | all | Lists all saved contacts. | all | 
 | phone | Shows the phone number(s) of a contact. | phone John | 
