@@ -252,7 +252,7 @@ def add_note(args, notes : NotesBook) -> str:
     if len(args) < 1:
         raise ValueError("Please enter argument: |note|")
 
-    return notes.add_note(args[0])  
+    return notes.add_note(" ".join(args))  
 
 @input_error
 def edit_note(args, notes) -> str:
@@ -466,8 +466,9 @@ def main() :
             if isinstance(notes, NotesBook):
                 for record in notes.data:
                     tags = ';'.join(p for p in notes.data[record].tags)
+                    content = "\n".join(notes.data[record].content[i:i+20] for i in range(0, len(notes.data[record].content), 20)) #notes.data[record].content if notes.data[record] != None else "No info"
                     creation_date = datetime.strftime(notes.data[record].created_at, "%d.%m.%Y") if notes.data[record] != None else "No info"
-                    notes_table.add_row([notes.data[record].id, notes.data[record].content if notes.data[record] != None else "No info", tags, creation_date])
+                    notes_table.add_row([notes.data[record].id, content, tags, creation_date])
                 print(notes_table)
             else: 
                 print("No contacts")
