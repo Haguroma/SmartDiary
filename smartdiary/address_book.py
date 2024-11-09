@@ -53,41 +53,7 @@ class Phone(Field):
     def __validate (self) -> bool:
          return bool(re.fullmatch(r'\d{10}', self.phone))
 
-# class Запис:
-#     """Клас для текстових заміток."""
-#     def __init__(self, текст):
-#         self.текст = текст
-
-#     def __str__(self):
-#         return self.текст
-
-# class КеруванняЗаписами:
-#     """Клас для керування замітками: додавання, редагування, видалення."""
-#     def __init__(self):
-#         self.записи = {}
-
-#     def додати_запис(self, назва, текст):
-#         self.записи[назва] = Запис(текст)
-#         return f"Запис '{назва}' додано."
-
-#     def редагувати_запис(self, назва, новий_текст):
-#         if назва in self.записи:
-#             self.записи[назва].текст = новий_текст
-#             return f"Запис '{назва}' оновлено."
-#         return f"Запис '{назва}' не знайдено."
-
-#     def видалити_запис(self, назва):
-#         if назва in self.записи:
-#             del self.записи[назва]
-#             return f"Запис '{назва}' видалено."
-#         return f"Запис '{назва}' не знайдено."
-
-#     def знайти_запис(self, назва):
-#         return self.записи.get(назва, "Запис не знайдено.")
-
-#     def показати_всі_записи(self):
-#         return "\n".join(f"{назва}: {запис}" for назва, запис in self.записи.items())         
-         
+   
 
 """Реалізовано зберігання об'єкта Name в окремому атрибуті.
 Реалізовано зберігання списку об'єктів Phone в окремому атрибуті.
@@ -148,51 +114,6 @@ class Record:
             return "Email added/updated."
         except ValueError as e:
             return str(e)
-    # def додати_запис(self, назва, текст):
-    #     return self.записи.додати_запис(назва, текст)
-
-    # def редагувати_запис(self, назва, новий_текст):
-    #     return self.записи.редагувати_запис(назва, новий_текст)
-
-    # def видалити_запис(self, назва):
-    #     return self.записи.видалити_запис(назва)
-
-    # def знайти_запис(self, назва):
-    #     return self.записи.знайти_запис(назва)
-
-    # def показати_всі_записи(self):
-    #     return self.записи.показати_всі_записи()
-
-# class AddressBook(UserDict):
-#     def add_record(self, record):
-#         self.data[record.name.значення] = record
-
-#     def find(self, name):
-#         return self.data.get(name, "Запис не знайдено.")
-
-#     def delete(self, name):
-#         if name in self.data:
-#             del self.data[name]
-#             return "Запис видалено."
-#         return "Запис не знайдено."        
-
-
-#     def find_phone(self, phone: str) -> str:
-#         for p in self.phones:
-#             if p.value == phone:
-#                 return p.value
-#         return "Phone not found."
-
-
-#     def copy_record(self):
-#         result = Record(self.name)
-
-#         result.phones = self.phones
-#         result.address = self.address
-#         result.email = self.email
-#         result.birthday = Birthday(self.birthday.birthday.strftime("%d.%m.%Y"))
-
-#         return result
 
 
 class AddressBook(UserDict):
