@@ -438,8 +438,9 @@ def main() :
             temp_notes = find_by_tag(args, notes)
             if len(temp_notes) > 0:
                 for record in temp_notes:
+                    tags = ';'.join(p for p in record.tags)
                     creation_date = datetime.strftime(record.created_at, "%d.%m.%Y") if record != None else "No info"
-                    notes_table.add_row([record.id, record.content if record != None else "No info", record.tags if record != None else "No info", creation_date])
+                    notes_table.add_row([record.id, record.content if record != None else "No info", tags, creation_date])
                 print(notes_table)  
             else:
                 print("No such notes")          
@@ -454,8 +455,9 @@ def main() :
             temp_notes = search_notes(args, notes)
             if len(temp_notes) > 0:         
                 for record in temp_notes:
+                    tags = ';'.join(p for p in record.tags)
                     creation_date = datetime.strftime(record.created_at, "%d.%m.%Y") if record != None else "No info"
-                    notes_table.add_row([record.id, record.content if record != None else "No info", record.tags if record != None else "No info", creation_date])
+                    notes_table.add_row([record.id, record.content if record != None else "No info", tags, creation_date])
                 print(notes_table)
             else:
                 print("No notes")
