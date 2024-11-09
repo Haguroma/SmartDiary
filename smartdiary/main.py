@@ -259,7 +259,7 @@ def edit_note(args, notes) -> str:
     if len(args) < 1:
         raise ValueError("Please enter 2 arguments: |Note ID| |New content|")
 
-    return  notes.edit_note_content(args[0], args[1]) 
+    return  notes.edit_note_content(args[0], " ".join(args[1:]) )
 
 @input_error
 def delete_note(args, notes) -> str:
@@ -330,6 +330,10 @@ def helper():
     
 
 def main() :
+
+    # для переносу нотатку на слідуючий рядок, якщо його довжина більша за  note_line_width
+    note_line_width = 50
+
     # завантажимо або новый зробимо словник Python для зберігання імен і номерів телефонів. Ім'я буде ключем, а номер телефону – значенням.
     book = load_data()
     notes = load_notes()
@@ -439,8 +443,9 @@ def main() :
             if len(temp_notes) > 0:
                 for record in temp_notes:
                     tags = ';'.join(p for p in record.tags)
+                    content = "\n".join(record.content[i:i+note_line_width] for i in range(0, len(record.content), note_line_width)) #notes.data[record].content if notes.data[record] != None else "No info"
                     creation_date = datetime.strftime(record.created_at, "%d.%m.%Y") if record != None else "No info"
-                    notes_table.add_row([record.id, record.content if record != None else "No info", tags, creation_date])
+                    notes_table.add_row([record.id, content, tags, creation_date])
                 print(notes_table)  
             else:
                 print("No such notes")          
@@ -456,8 +461,9 @@ def main() :
             if len(temp_notes) > 0:         
                 for record in temp_notes:
                     tags = ';'.join(p for p in record.tags)
+                    content = "\n".join(record.content[i:i+note_line_width] for i in range(0, len(record.content), note_line_width)) #notes.data[record].content if notes.data[record] != None else "No info"
                     creation_date = datetime.strftime(record.created_at, "%d.%m.%Y") if record != None else "No info"
-                    notes_table.add_row([record.id, record.content if record != None else "No info", tags, creation_date])
+                    notes_table.add_row([record.id, content, tags, creation_date])
                 print(notes_table)
             else:
                 print("No notes")
@@ -466,7 +472,7 @@ def main() :
             if isinstance(notes, NotesBook):
                 for record in notes.data:
                     tags = ';'.join(p for p in notes.data[record].tags)
-                    content = "\n".join(notes.data[record].content[i:i+20] for i in range(0, len(notes.data[record].content), 20)) #notes.data[record].content if notes.data[record] != None else "No info"
+                    content = "\n".join(notes.data[record].content[i:i+note_line_width] for i in range(0, len(notes.data[record].content), note_line_width)) #notes.data[record].content if notes.data[record] != None else "No info"
                     creation_date = datetime.strftime(notes.data[record].created_at, "%d.%m.%Y") if notes.data[record] != None else "No info"
                     notes_table.add_row([notes.data[record].id, content, tags, creation_date])
                 print(notes_table)
