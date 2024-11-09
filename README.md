@@ -5,8 +5,17 @@ Features
 Contact Management:
 Add new contacts with names and phone numbers.
 Store multiple phone numbers for a single contact.
+Search for contacts by name.
+Add email addresses to contacts.
+Add addresses to contacts.
 Edit existing contact information.
 Delete contacts.
+
+Notes Management:
+Add new notes.
+Store multiple tags for a single note.
+Search for notes by keyword or tag.
+Delete note.
 
 Birthday Tracking:
 Add birthdays to contacts.
@@ -50,7 +59,17 @@ Follow the on-screen prompts and use the available commands:
 | add-birthday | Adds a birthday to a contact. | add-birthday John 01.01.1990 | 
 | show-birthday| Shows the birthday of a contact. | show-birthday John | 
 | birthdays | Lists upcoming birthdays within a given period (default: 7 days). | birthdays or birthdays 14 | 
+| add-email | Adds an email address to a contact. | add_email John john@gmail.com |
+| add-address | Adds an address to a contact. | add_address John 123 Main St, City, Country |
+| add-note | Adds a note to a contact. | add_note John work on this task |
+| edit-note | Edit a note for a contact | edit-note 5 new_note |
+| delete-note | Delete a note for a contact | delete-note 5 |
+| search-notes | Search notes by keyword | search-notes word | 
+| notes | Shows all notes for a contact. | notes | 
 | close/exit | Exits the application. | close or exit |
+| remove-tag | Removes a tag from a note | remove-tag tag |
+| add-tag | Adds a tag to note | add-tag 1 tag |
+| find-by-tag | Finds notes by tag | find-by-tag tag |
 
 Contributing
 Contributions are welcome! If you find any bugs or have suggestions for new features, please open an issue or submit a pull request. [1]
