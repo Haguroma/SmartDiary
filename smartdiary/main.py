@@ -235,13 +235,15 @@ def show_birthday(args : list[str], book : AddressBook) -> str:
     else:
         raise KeyError("Please give existing name")
 
+from datetime import datetime, timedelta
 
 @input_error
 def get_upcoming_birthdays(args : list[str], book : AddressBook) -> AddressBook:
     period = 7
     if len(args) >= 1:
-        period = args[0]
-    congrat_book = book.get_upcoming_birthdays(period)
+        period = int(args[0])
+    congrat_book = book.get_upcoming_birthdays(int(period))
+ 
     if congrat_book:
         return congrat_book
     else:
@@ -424,8 +426,8 @@ def main() :
                     contact = congrat_list.data[record]
                     name = contact.name.value
                     phone = ';'.join(p.value for p in contact.phones)
-                    email = contact.email.value if record.email != None else "No info"
-                    address = contact.address.value if record.address != None else "No info"
+                    email = contact.email.value if contact.email != None else "No info"
+                    address = contact.address.value if contact.address != None else "No info"
                     birthday = datetime.strftime(contact.birthday.birthday, "%d.%m.%Y") if contact.birthday != None else "No info"
                     table.add_row([name, phone, email, address, birthday])
                 print(table)

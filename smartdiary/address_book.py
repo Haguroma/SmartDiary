@@ -114,6 +114,15 @@ class Record:
             return True
         except ValueError as e:
             return str(e)
+        
+    def copy_record(self):
+        result = Record(self.name)
+        result.phones = self.phones
+        result.birthday = Birthday(self.birthday.birthday.strftime("%d.%m.%Y"))
+        result.address = Address(self.address.value) if self.address else None  # Адреса контакту
+        result.email = Email(self.email.value) if self.email else None  # Адреса контакту 
+
+        return result
 
 
 class AddressBook(UserDict):
@@ -136,10 +145,10 @@ class AddressBook(UserDict):
                 user = self.data[title]
                 if user.birthday != None:
                     user_birthday = user.birthday.birthday
-            
+                    
                     # Empoyee's birthday this year
                     user_birthday = user_birthday.replace(year=today.year)
-            
+                    
                     # NewYear case
                     if (user_birthday < today) : 
                         user_birthday = user_birthday.replace(year=today.year + 1)
@@ -154,6 +163,7 @@ class AddressBook(UserDict):
                             user_birthday += timedelta(days=(period -user_birthday.weekday()))
 
                         temp = user.copy_record()
+                        print ("hi")
                         temp.add_birthday(user_birthday.strftime("%d.%m.%Y"))
                         users_to_congrat.add_record(temp)
             return users_to_congrat
