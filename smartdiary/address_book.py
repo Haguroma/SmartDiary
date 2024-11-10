@@ -163,7 +163,6 @@ class AddressBook(UserDict):
                             user_birthday += timedelta(days=(period -user_birthday.weekday()))
 
                         temp = user.copy_record()
-                        print ("hi")
                         temp.add_birthday(user_birthday.strftime("%d.%m.%Y"))
                         users_to_congrat.add_record(temp)
             return users_to_congrat
