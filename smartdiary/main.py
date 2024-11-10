@@ -324,6 +324,8 @@ def helper():
     table_help.add_row(["delete-note", "Delete a note for a contact"])
     table_help.add_row(["search-notes", "Search notes by keyword"])
     table_help.add_row(["notes", "Show all notes"])
+    table_help.add_row(["add-tag", "Add a tag to a note"])
+    table_help.add_row(["edit-note", "Edit a note for a contact"])
     table_help.add_row(["remove-tag", "Remove tag from note"])
     table_help.add_row(["find-by-tag", "Find notes by tag"])
 
