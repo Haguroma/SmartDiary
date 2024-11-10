@@ -136,10 +136,11 @@ def add_email(args: list[str], book: AddressBook) -> str:
     record = book.find(name)
 
     if isinstance(record, Record):
-        record.edit_email(email)
-        return "Email added."
-    else:
-        return "Name not found."
+        if (record.edit_email(email)) == True:
+            return "Email added."
+        else:
+            return ('Invalid email format. Please enter a valid email address.') 
+    return "Name not found."
 
 
 @address_input_error

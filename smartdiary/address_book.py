@@ -108,10 +108,10 @@ class Record:
         return "Address added/updated."
 
    
-    def edit_email(self, email: str):
+    def edit_email(self, email: str) -> bool:
         try:
             self.email = Email(email)
-            return "Email added/updated."
+            return True
         except ValueError as e:
             return str(e)
 
