@@ -160,7 +160,7 @@ class AddressBook(UserDict):
                     if (0<= days_before <= period) :
                         # If on weekends 
                         if (user_birthday.weekday() >=5) :
-                            user_birthday += timedelta(days=(period -user_birthday.weekday()))
+                            user_birthday += timedelta(days=(7 -user_birthday.weekday()))
 
                         temp = user.copy_record()
                         temp.add_birthday(user_birthday.strftime("%d.%m.%Y"))
